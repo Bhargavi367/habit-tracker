@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Habit Ticker – Visual Habit Tracker</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+      color: #333;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      color: #222;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    #habitList {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 600px;
+    }
+
+    .habit {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      cursor: pointer;
+      font-size: 3rem;
+      padding: 24px 32px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 100px;
+    }
+
+    .habit:hover:not(.completed) {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+
+    .habit.completed {
+      opacity: 0.4;
+      text-decoration: line-through;
+      cursor: default;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .bar-container {
+      width: 100%;
+      max-width: 600px;
+      background: #eee;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 28px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #56ab2f, #a8e063);
+      width: 0%;
+      transition: width 0.6s ease-in-out;
+    }
+
+    #progressLabel {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 30px;
+    }
+
+    #resetBtn {
+      padding: 12px 28px;
+      background: #ff6b6b;
+      border: none;
+      border-radius: 30px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 107, 107, 0.4);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #resetBtn:hover {
+      background: #ff5252;
+      box-shadow: 0 6px 14px rgba(255, 82, 82, 0.6);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      #habitList {
+        gap: 16px;
+      }
+
+      .habit {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+      }
+
+      #resetBtn {
+        padding: 10px 24px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🗓️ Habit Ticker</h1>
+  <p>Click your habits to mark them done and watch your progress grow!</p>
+
+  <div id="habitList">
+    <div class="habit" title="Meditate">🧘</div>
+    <div class="habit" title="Read">📚</div>
+    <div class="habit" title="Drink Water">💧</div>
+    <div class="habit" title="Exercise">🏋️‍♂️</div>
+    <div class="habit" title="Sleep Early">🌙</div>
+  </div>
+
+  <div class="bar-container" aria-label="Progress Bar">
+    <div id="progressBar" class="progress-bar"></div>
+  </div>
+
+  <div id="progressLabel">Progress: 0%</div>
+
+  <button id="resetBtn" aria-label="Reset Habits">Reset Habits</button>
+
+  <script>
+    const habits = document.querySelectorAll('.habit');
+    const progressBar = document.getElementById('progressBar');
+    const progressLabel = document.getElementById('progressLabel');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let completed = 0;
+
+    habits.forEach(habit => {
+      habit.addEventListener('click', () => {
+        if (!habit.classList.contains('completed')) {
+          habit.classList.add('completed');
+          completed++;
+          updateProgress();
+        }
+      });
+    });
+
+    resetBtn.addEventListener('click', () => {
+      habits.forEach(habit => habit.classList.remove('completed'));
+      completed = 0;
+      updateProgress();
+    });
+
+    function updateProgress() {
+      let percent = Math.round((completed / habits.length) * 100);
+      progressBar.style.width = percent + '%';
+      progressLabel.textContent = `Progress: ${percent}%`;
+      if (percent === 100) {
+        progressLabel.textContent = "🎉 All habits completed! Great job!";
+      }
+    }
+  </script>
+
+</body>
+</html>
